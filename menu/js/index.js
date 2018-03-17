@@ -99,7 +99,7 @@ function Text(options) {
     this.size = options.size || 100;
     this.copy = (options.copy || `@dark_ang1s`) + ' ';
     this.color = options.color || '#fecd96';
-    this.delay = options.delay || 4;
+    this.delay = options.delay || -1;
     this.basedelay = this.delay;
     buffer.font = `${this.size}px Comic Sans MS`;
     this.bound = buffer.measureText(this.copy);
