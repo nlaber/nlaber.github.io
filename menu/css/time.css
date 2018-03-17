@@ -1,0 +1,58 @@
+@import url("https://fonts.googleapis.com/css?family=Old+Standard+TT");
+html,
+body {
+  height: 100%;
+  font-family: 'Old Standard TT', serif;
+  background-color: #1f1f1f;
+  margin: 0;
+  font-size: 0;
+  color: white;
+  text-align: center;
+  overflow: hidden;
+  background-image: url(../img/bg.jpg);
+  -webkit-background-size: cover;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+}
+
+#clock {
+  font-size: 24px;
+  width: 350px;
+  height: 350px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -175px;
+  margin-top: -175px;
+}
+
+.digit-group {
+  display: inline-block;
+  height: 350px;
+}
+.digit-group:not(:last-child):after {
+  content: ':';
+  font-size: 72px;
+}
+
+.digit {
+  display: inline-block;
+  width: 50px;
+  height: 350px;
+}
+.digit .digit-number {
+  color: rgba(255, 255, 255, 0.2);
+  -webkit-transform: rotate(-90deg);
+          transform: rotate(-90deg);
+  -webkit-transition: font-size 200ms, color 150ms, -webkit-transform 350ms;
+  transition: font-size 200ms, color 150ms, -webkit-transform 350ms;
+  transition: font-size 200ms, transform 350ms, color 150ms;
+  transition: font-size 200ms, transform 350ms, color 150ms, -webkit-transform 350ms;
+}
+.digit .digit-number.highlight {
+  color: inherit;
+  font-size: 72px;
+  -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+}
