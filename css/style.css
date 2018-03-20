@@ -3,6 +3,7 @@
 General Style
 --------------------------------------------------------------*/
 
+
 html{
 	overflow-x:hidden !important;
 	height:100%;
@@ -185,6 +186,5 @@ Content Styles
 .select-type{
 	display:none
 }
-
 
 }
