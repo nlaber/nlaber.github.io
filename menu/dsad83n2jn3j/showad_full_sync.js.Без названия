@@ -1,0 +1,359 @@
+(function (pix_id, setfallback) {
+var havebanner = 0;
+var cap = 100; // процент показа рекламы от другого ads
+var logo_domain = 'http://betweendigital.ru';
+var logo_params = '?utm_source=ssp_banner&utm_medium='+window.location.hostname+'&utm_campaign=iconclick';
+function btw_ad_close(id) {
+    elm_ad = document.getElementById(id);
+    if (elm_ad) {
+        elm_ad.style.display = 'none';
+    }
+}
+
+function btw_data_check(data, section)
+{
+    return (data['provider']
+        && data['provider'] == 'between'
+        && data['section'] == section
+        && ! data['is_show']
+    )
+}
+
+function get_itu(id) {
+    if (window.itu !== undefined && window.itu[id] !== undefined) {
+        return '&itu=' + encodeURIComponent(window.itu[id])
+    } else {
+        return ''
+    }
+}
+
+function btw_getWindowSize()
+{
+    var winWidth,winHeight;
+    if( typeof( window.innerWidth ) == 'number' ) {
+        //Non-IE
+        winWidth = window.innerWidth;
+        winHeight = window.innerHeight;
+    } else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
+        //IE 6+ in 'standards compliant mode'
+        winWidth = document.documentElement.clientWidth;
+        winHeight = document.documentElement.clientHeight;
+    } else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) {
+        //IE 4 compatible
+        winWidth = document.body.clientWidth;
+        winHeight = document.body.clientHeight;
+    }
+    return {"width":winWidth, "height":winHeight};
+}//END function btw_getWindowSize
+
+
+function btw_getBodyScrollTop()
+{
+    return self.pageYOffset || (document.documentElement && document.documentElement.scrollTop) || (document.body && document.body.scrollTop);
+} //END function btw_getBodyScrollTop
+
+function btw_getBodyScrollLeft()
+{
+    return self.pageXOffset || (document.documentElement && document.documentElement.scrollLeft) || (document.body && document.body.scrollLeft);
+} //END function btw_getBodyScrollLeft
+
+function btw_absPosition(obj)
+{
+    var x = y = 0;
+    while(obj) {
+        x += obj.offsetLeft;
+        y += obj.offsetTop;
+        obj = obj.offsetParent;
+    }
+    return {x:x, y:y};
+} //END function btw_absPosition
+
+function is_btw_show()
+{
+    var wind_size = btw_getWindowSize();
+    var posY = wind_size.height + btw_getBodyScrollTop();
+    var posX = wind_size.width + btw_getBodyScrollLeft();
+    var position = btw_absPosition(document.getElementById("btw_ad_" + btw_section));
+    return (posY >= position.y && posX >= position.x)
+}
+
+function btw_show()
+{
+    if ( ! is_show_btw ) {
+        if(document.getElementById("btw_ad_" + btw_section) !== null) {
+            document.getElementById("btw_ad_" + btw_section).src = baseURL;
+            is_show_btw = true;
+        }
+    }
+}
+
+function is_mode_visibility_only() {
+    return (typeof btw_show_in_visible != 'undefined' && btw_show_in_visible == true)
+}
+
+
+if(((Math.random() * 100))>cap) {
+    var baseURL = '//ads.betweendigital.com/'; // This URL should be changed.
+} else {
+    var baseURL = '//ads.betweendigital.com/'; // This URL should be changed.
+}
+
+
+// Get TZ offset
+var tzOffset = new Date().getTimezoneOffset();
+var is_show_btw = false;
+
+// Get major flash version
+var flashVersion = 0;
+
+if (typeof navigator.plugins != 'undefined' && typeof navigator.plugins["Shockwave Flash"] == "object" ) {
+    var d = navigator.plugins["Shockwave Flash"].description;
+    if (d && !(typeof navigator.mimeTypes != 'undefined' && navigator.mimeTypes["application/x-shockwave-flash"] && !navigator.mimeTypes["application/x-shockwave-flash"].enabledPlugin)) {
+        d = d.replace(/^.*\s+(\S+\s+\S+$)/, "$1");
+        flashVersion = parseInt(d.replace(/^(.*)\..*$/, "$1"), 10);
+    }
+} else if (typeof window.ActiveXObject != 'undefined') {
+    try {
+        var a = new ActiveXObject("ShockwaveFlash.ShockwaveFlash");
+        if (a) {
+            var d = a.GetVariable("$version");
+            if (d) {
+                d = d.split(" ")[1].split(",");
+                flashVersion = parseInt(d[0], 10);
+            }
+        }
+    }
+    catch(e) {}
+}
+
+
+
+
+/* Calculate visibility */
+// Add new transparent pixel, so we can get it's offset
+
+document.write(
+  "<img id=\""+ pix_id+"\" src=\"\/\/cache.betweendigital.com\/code\/1x1.gif\" alt=\" \" style=\"display:none\"\/>"
+);
+
+// Trying to calculate pixel's offsetY
+var pix = document.getElementById ? document.getElementById(pix_id) : document.all[pix_id];
+if (pix) {
+    pix.style.visibility = 'hidden';
+    pix.style.position = 'absolute';
+    pix.style.display = 'block';
+}
+var pos = pix ? pix.offsetTop : 0;
+while (pix && (pix.offsetParent != null)) {
+   pix = pix.offsetParent;
+   pos += pix.offsetTop;
+   if (pix.tagName == 'BODY') break;
+}
+
+// Trying to calculate browser window height
+var winHeight = 0;
+
+if( typeof( window.innerHeight ) == 'number' ) {
+    // Non-IE
+    winHeight = window.innerHeight;
+} else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
+    // IE 6+ in 'standards compliant mode'
+    winHeight = document.documentElement.clientHeight;
+} else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) {
+    // IE 4 compatible
+    winHeight = document.body.clientHeight;
+}
+
+// Compare and save
+if ((window == top) && (pos || (pos === 0)) && winHeight ) { // If winHeight === 0, there is something wrong, so report as N/A
+    pos > winHeight ? pos='btf' : pos='atf';
+} else {
+    pos='';
+}
+
+if (is_mode_visibility_only()) {
+    // check position in iframe
+    if (window == top) {
+        pos='atf';
+    } else {
+        pos='';
+    }
+ }
+
+// get iframe level
+var btw_frm_level = 0;
+var _btw_cnt = window;
+while (window.top != _btw_cnt.window) {
+   btw_frm_level++;
+   _btw_cnt = _btw_cnt.parent;
+   // if level is large that break from cycle
+   if (btw_frm_level >= 20) {
+      break;
+   }
+}
+// end get iframe level
+
+// Get referer
+var refererURL = '';
+var href = '';
+try {
+    href = top.location.href;
+} catch(e) {
+    href = '';
+}
+if(top!=self) {
+    if(href != '') {
+        refererURL = encodeURIComponent(href);
+    } else {
+        if(btw_frm_level == 1) {
+            refererURL = encodeURIComponent(window.document.referrer);
+        } else {
+            refererURL = encodeURIComponent(window.location.href);
+        }
+    }
+} else {
+    refererURL = '';
+}
+
+
+var foc;
+if(window == window.top) {
+    if (document.visibilityState == 'visible') {
+        foc = 1;
+    } else {
+        foc = 0;
+    }
+};
+
+// Store all data
+var params = [ 'ref='+refererURL, 'tz='+tzOffset, 'fl='+flashVersion, 'pos='+pos, 'frl='+btw_frm_level, 'ord='+Math.random()*10000000000000000 ];
+if (foc !== undefined){params.push('foc='+foc)};
+
+try {
+    var td = top.document;
+    var rr = td.referrer;
+} catch (err) {}
+if(typeof rr != 'undefined' && rr.length > 0) params.push("rr="+encodeURIComponent(rr));
+else if(typeof rr != 'undefined' && rr == "") params.push("rr=direct");
+
+
+var embedType = 'adj'; // serve with 'script' tag by default
+var size=[];
+var btw_section = 0
+// Add user-defined params to final URL
+if (_up instanceof Array ) {
+    for (var i=0; i< _up.length; i++) {
+        if (!_up[i] instanceof Array) continue;
+        if (_up[i] == null) continue;
+        switch (_up[i][0]) {
+            case 'tagType':
+                embedType = _up[i][1];
+                break;
+            case 's':
+                btw_section = _up[i][1];
+                params.push(_up[i][0]+'='+_up[i][1]);
+                break;
+            case 'click3rd':
+                if(_up[i][1].indexOf('?') > -1 || _up[i][1].indexOf('&') > -1 || _up[i][1].indexOf('/') > -1) {
+                    _up[i][1] = encodeURIComponent(_up[i][1]);
+                }
+                params.push(_up[i][0]+'='+_up[i][1]);
+                break;
+            case 'w':
+                size[0] = _up[i][1];
+            case 'h':
+                size[1] = _up[i][1];
+            default:
+                if(_up[i][0] == 'c2s') {
+                    window.c2s = _up[i][1];
+                }
+                params.push(_up[i][0]+'='+_up[i][1]);
+                break;
+        }
+    }
+}
+
+if (is_mode_visibility_only()) {
+    embedType = 'adi';
+}
+
+baseURL += embedType + '?' + params.join('&') + get_itu(btw_section);
+if(embedType == 'adj') {
+    baseURL += '&jst=sj';
+} else {
+    baseURL += '&jst=si';
+}
+
+function listener(event) {
+    if( event.origin.replace(/https?:\/\//i, "") != 'ads.betweendigital.com') {
+        return;
+    }
+    if (btw_data_check(event.data, btw_section)) {
+        btw_ad_close('btw_ad_'+btw_section);
+    }
+    havebanner = 1;
+}
+
+if (window.addEventListener){
+    window.addEventListener("message", listener, false);
+} else {
+    window.attachEvent("onmessage", listener);
+}
+
+if (is_mode_visibility_only())
+{
+    var fn_onscroll = window.onscroll;
+    window.onscroll = function() {
+        if (fn_onscroll) {
+            fn_onscroll();
+        }
+        if (is_btw_show()) {
+            btw_show();
+        }
+    }
+
+    document.write("<div><iframe id='btw_ad_" + btw_section + "' style='border:none;height:"+size[1]+"px;width:"+size[0]+"px' width='" + size[0] +"' height='" + size[1]+ "' border='0' scrolling='no'></iframe></div>");
+    if (is_btw_show()) {
+        btw_show();
+    }
+} else {
+    if (embedType == 'adj') {
+        document.write("<script type='text/javascript' src='"+ baseURL +"'></script>");
+        /*document.write("<div id='btw_checker_ads' style='display:inline-block'><script type='text/javascript' src='"+ baseURL +"'></script></div>");
+        if(base_url !== undefined && base_url == 'testing') {
+            document.write("<script type='text/javascript' src='//testing.betweendigital.com/creatives/code/check_ads.js'></script>");
+        } else {
+            document.write("<script type='text/javascript' src='//cache.betweendigital.com/code/check_ads.js'></script>");
+        }*/
+    } else {
+        document.write("<div><iframe id='btw_ad_" + btw_section + "' src='"+ baseURL +"' style='border:none;height:"+size[1]+"px;width:"+size[0]+"px' width='" + size[0] +"' height='" + size[1]+ "' border='0' scrolling='no'></iframe></div>");
+    }
+}
+function addEventListener(el, event, callback) {
+    if (el.addEventListener) {
+        el.addEventListener(event, callback, false);
+    } else {
+        el.attachEvent("on" + event, callback);
+    }
+}
+/*var el = document.getElementById("btw_ad_" + btw_section);
+if (el !== undefined && el !== null) {
+    addEventListener(el, "load", function haveban () {
+        if(havebanner === 0) {
+            setfallback(el, haveban, window.c2s, window.fc2s);
+        }
+    });
+}*/
+var attachPixel = function(){
+    var pixel = document.createElement('img');
+    var timestamp = new Date().getTime();
+    pixel.src = '//www.tns-counter.ru/V13a****vitpc_ad/ru/CP1251/tmsec=vitpc_between-1/'+ timestamp;
+    pixel.style.width = '1px';
+    pixel.style.height = '1px';
+    pixel.style.display = 'none';
+    document.getElementsByTagName('body')[0].appendChild(pixel);
+};
+
+attachPixel();
+
+})(pix_id, setfallback);

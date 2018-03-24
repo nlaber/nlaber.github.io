@@ -1,0 +1,13 @@
+try {
+    var _aManager = this.window.AdverturManager || parent.window.AdverturManager || top.window.AdverturManager || false;
+    if( _aManager ){
+        _aManager.setElementSettings('204916', 'at_code', "%3Cscript%3Evar%20advertur_at_204916%20%3D%20%7B%22domainId%22%3A%2266314%22%2C%22description%22%3A%22204916%22%2C%22pid%22%3A164%2C%22size%22%3A%7B%22width%22%3A%22300%22%2C%22height%22%3A%22250%22%7D%2C%20%22firstDelay%22%3A0%7D%3C%2Fscript%3E%0A%3Cscript%20src%3D%22https%3A%2F%2Fcdn.adtags.pro%2FadtagsLoader.js%22%20onload%3D%22adtagsLoader%28%27advertur_at_204916%27%2C%20advertur_at_204916%29%22%3E%3C%2Fscript%3E");
+    }
+} catch (err) { };
+setTimeout(function () {
+    var _aManager = this.window.AdverturManager || parent.window.AdverturManager || top.window.AdverturManager || false;
+    if( _aManager ) {
+        _aManager.rotationBannerPlace('204916');
+    }
+}, '60000');
+document.write("<script type=\"text/javascript\">"+"\n"+"    "+"\n"+"    window.between_subid = '37460';"+"\n"+"    var between_type = \"adj\";"+"\n"+"    var btw_click3rd_2156602 = 'http://ddc.advertur.ru/click/';"+"\n"+"</script>"+"\n"+"<script type=\"text/javascript\" src=\"//ddpnt.advertur.ru/sections/2156602.js\"></script>")

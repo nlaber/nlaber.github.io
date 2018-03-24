@@ -1,0 +1,2 @@
+document.body.insertAdjacentHTML('beforeend', "<img style='display:none' async='true' src='https://dsp.kavanga.ru/sync/betweendigital.gif?ssp_uid=54200436-4cef-4575-9240-7bd778058fa6'/>");
+document.body.insertAdjacentHTML('beforeend', "<img style='display:none' async='true' src='https://x.bidswitch.net/sync?ssp=between'/>");

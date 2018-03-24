@@ -1,0 +1,80 @@
+try {
+            var _up = [
+                ['w', '300'],
+                ['h', '250'],
+                ['tagType', between_type],
+                ['s', '2156601'],
+                ['c2s', 1],
+            ];
+            var pix_id = 'tpix_2156601';
+            var _pix = document.getElementById ? document.getElementById(pix_id) : document.all[pix_id];
+            
+            
+			var icon = 0
+            var base_url;
+            window.fc2s;
+            var site_id = 477408;
+            function setfallback(elem, cb, c2s, fc2s) {
+                if(cb !== null) {
+                    if (elem.removeEventListener)
+                        elem.removeEventListener('load', cb, false)
+                    else if (elem.detachEvent)
+                        elem.detachEvent('onload', cb)
+                }
+
+                if(typeof html != 'undefined') {
+                    if(c2s == 1 && fc2s == 1) {
+                        var wrapper = document.createElement('div');
+                        wrapper.innerHTML = decodeURIComponent(html.replace(/\+/g, ' '));
+
+                        var container = elem.parentElement;
+                        if(document.getElementById('btw_ad_2') !== null) {
+                            container.removeChild(document.getElementById('btw_ad_2'));
+                        } else {
+                            container.removeChild(elem);
+                        }
+                        var all = wrapper.querySelectorAll('*');
+                        for(var i=0; i<all.length; i++) {
+                            if(all[i].nodeName == 'SCRIPT') {
+                                container.appendChild(all[i]);
+                                var last_child = container.childNodes[container.childNodes.length-1];
+                                try {
+                                    eval(last_child.innerHTML);
+                                } catch (e) {
+                                    console.log(e);
+                                }
+                            } else {
+                                container.appendChild(all[i]);
+                            }
+                        }
+                    } else {
+                        elem.srcdoc = '<html><head><style>body {margin:0;padding:0;}</style></head><body>'+decodeURIComponent(html.replace(/\+/g, ' '))+'</body></html>';
+                        elem.style.display = 'inline';
+                    }
+                }
+            }
+            if ( ! _pix ) {
+                if (window.between_subid !== undefined) {
+                    _up.push(['subid', between_subid])
+                }
+                if (window['btw_click3rd_2156601'] !== undefined) {
+                    _up.push(['click3rd', window['btw_click3rd_2156601']])
+                }
+                document.write("<script type='text/javascript'" +
+                  "src='//cache.betweendigital.com/code/showad_full_sync.js'></script>");
+            }
+
+} catch(e) {
+    console.log(e)
+    var rand = 1 + Math.random() * (100 + 1 - 1);
+    rand = Math.floor(rand);
+
+    if(rand == 100) {
+        var script = document.createElement('script');
+        script.setAttribute('src', ("https:" === document.location.protocol ? "https://" : "http://") + 'cp.betweendigital.com/log.js?id='+section.id+'&url='+window.location.href+'&message='+e.stack+'&code='+e.name+'&place=sync&agent='+window.navigator.userAgent);
+        script.setAttribute('type', 'text/javascript');
+        script.async = true;
+
+        document.body.appendChild(script);
+    }
+}
